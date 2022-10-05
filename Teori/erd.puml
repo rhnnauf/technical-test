@@ -1,0 +1,103 @@
+' untuk teknologi yang dipakai saya memilih database yang bersifat dikarenakan sudah dapat mencukupi kebutuhan bisnis,
+' skema data yang sudah dapat dirancang sejak awal, dan jenis data yang bersifat structured
+
+' untuk database yang digunakan dapat memakai mysql ataupun postgresql
+
+' kapan memilih penggunaan nosql:
+' 1. ketika data bersifat unstructured atau dalam jumlah besar
+' 2. ketika tidak data tidak terlalu bergantung dengan konsistensi (eventual consistency)
+' 3. schema yang bersifat fleksibel, lebih cocok menggunakan nosql
+' 4. skalabilitas horizontal
+
+' kapan memilih penggunaan sql:
+' 1. kompleks query
+' 2. ketika ingin konsistensi (ACID)
+' 3. skalabilitas vertikal
+' 4. memiliki predefined schema
+
+@startuml user
+
+' hide the spot
+hide circle
+
+entity "Restaurant" as Restaurant{
+    * id: ID (pk)
+    --
+    * name: string
+    * restaurantType: string
+}
+
+' assuming we have multiple branches
+entity "Branch" as Branch{
+    * id: ID (pk)
+    --
+    * restaurant_id: ID (fk)
+    * location: string
+    * noTelp: string
+}
+
+Restaurant ||--|{ Branch
+
+entity "Employee" as Employee{
+    * id: ID (pk)
+    --
+    * branch_id: ID (fk)
+    * employeeName: string
+    * employeeTelp: string
+    * role: string
+}
+
+Branch ||--|{ Employee
+
+entity "Order" as Order{
+    * id: ID (pk)
+    --
+    * employee_id: ID (fk)
+    * branch_id: ID (fk)
+    * orderNo: bigint
+    * date: datetime
+    * totalPrice: float
+}
+
+Employee ||--|{ Order
+Branch ||--o{ Order
+
+entity "OrderDetail" as OrderDetail{
+    * id: ID (pk)
+    --
+    * order_id: ID (fk)
+    * menu_id: ID (fk)
+    * qty: int
+}
+
+entity "Menu" as Menu{
+    * id: ID (pk)
+    --
+    * menuName: string
+    * price: float
+}
+
+Menu ||--|{ OrderDetail
+Order ||--|{ OrderDetail
+
+entity "MenuIngredient" as MenuIngredient{
+    * id: ID (pk)
+    --
+    * menu_id: ID (fk)
+    * ingredient_id: ID (fk)
+}
+
+entity "Ingredient" as Ingredient{
+    * id: ID (pk)
+    --
+    * branch_id: ID (fk)
+    * ingredientName: string
+    * ingredientPrice: float
+    * stock: int
+}
+
+Menu ||--|{ MenuIngredient
+Ingredient ||--|{ MenuIngredient
+Branch ||--|{ Ingredient
+
+@enduml
