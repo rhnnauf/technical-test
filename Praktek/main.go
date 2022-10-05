@@ -69,7 +69,7 @@ type diceGame struct {
 	// (a). removing "6" from each player dices, then incrementing the player score based on "6" occurrences
 	// (b). removing "1" from each player dices, then move the "1" to the next player if there is an occurrence
 // 4. display after evaluation in step(3)
-// 5. check has winner, if not repeat step(1) => if only 1 player that has dices left in their slice
+// 5. check has winner, if not repeat step(1) || if only 1 player that has dices left in their slice then break
 
 func (d *diceGame) start() {
 	// keep playing until there is only one player remaining
@@ -129,7 +129,7 @@ func (d *diceGame) start() {
 		fmt.Println("Setelah evaluasi: ")
 		d.printPlayerScoreAndDices()
 
-		// step(5): check has winner => if only 1 player that has dices left in their slice
+		// step(5): check has winner
 		for idx, p := range d.players{
 			if len(p.dices) == 0 {
 				// if the player is still playing, then change the isPlaying value to false
@@ -230,7 +230,7 @@ func main() {
 		return
 	}
 
-	// initialize new game, base on the input
+	// initialize new game, based on the input
 	game := newDiceGame(int(inputPlayer), int(inputDice))
 
 	fmt.Printf("Pemain = %d, Dadu = %d\n", inputPlayer, inputDice)
